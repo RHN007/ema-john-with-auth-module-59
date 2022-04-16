@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
+import { useAuthState, useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { Link, Navigate } from 'react-router-dom';
-import '../Login/Login.css'
-import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
-import auth from '../../firebase.init'
-const SignUp = () => {
+import auth from '../../firebase.init';
 
-    const [email, setEmail] = useState('');
+const Shipment = () => {
+    
+    const [user] = useAuthState(auth)
+    const [email, setEmail] = useState(''); 
     const [password, setPassword] = useState(''); 
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
 
-    const [createUserWithEmailAndPassword,user] = useCreateUserWithEmailAndPassword(auth)
+    const [createUserWithEmailAndPassword] = useCreateUserWithEmailAndPassword(auth)
 
 
-    const handleNameBlur = event => {
+    const handleEmailBlur = event => {
         setEmail(event.target.value); 
 
     }
@@ -30,31 +31,22 @@ const SignUp = () => {
     }
     const handleCreateUser = event => {
         event.preventDefault();
-        if(password !== confirmPassword){
-            setError('Your passwords did not match')
-            return
-        }
-        if(password.length<6){
-            setError('password must be 6 characters or longer')
-            return; 
-        }
-        createUserWithEmailAndPassword(email,password)
+       
     }
-
-
+    
     return (
          <div className='form-container'>
             <div>
-            <h2 className='form-title'>Shipping Information</h2>
+            <h2 className='form-title'>SignUp</h2>
             <form onClick={handleCreateUser} >
                 <div className="input-group">
-                <label htmlFor="name">Your Name</label>
-                <input onBlur={handleNameBlur} type="text" name='email' id='' required/>
+                <label htmlFor="email">Email</label>
+                <input value={user?.email} readOnly type="email" name='email' id='' required/>
             </div>
             <div className="input-group">
 
-                <label htmlFor="address">Address</label>
-                <input onBlur={handlePasswordBlur} type="text" name="password" required />
+                <label htmlFor="password">Password</label>
+                <input onBlur={handlePasswordBlur} type="password" name="password" required />
             </div>
             <div className="input-group">
                 <label htmlFor="confirm-password">Confirm-Password</label>
@@ -69,4 +61,4 @@ const SignUp = () => {
     );
 };
 
-export default SignUp;
+export default Shipment;
